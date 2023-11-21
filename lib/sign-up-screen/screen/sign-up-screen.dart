@@ -9,6 +9,13 @@ import '../widget/date-input-widget.dart';
 import '../widget/phone-number-widget.dart';
 
 class SignupScreen extends StatefulWidget{
+  final String full_name;
+  final String email;
+
+  SignupScreen({
+    required this.full_name,
+    required this.email
+  });
   State<SignupScreen> createState()=> SignupScreenState();
 }
 
@@ -29,6 +36,12 @@ class SignupScreenState extends State<SignupScreen>{
   }
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic>? args =
+    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    // Use the full_name parameter from the widget or arguments
+    final String full_name = args?['full_name'] ?? widget.full_name;
+    final String email_ = args?['email'] ?? widget.email;
     // TODO: implement build
     return SafeArea(
         child:Scaffold(
@@ -41,31 +54,75 @@ class SignupScreenState extends State<SignupScreen>{
                   child: Column(
                     children: [
                       SizedBox(height: 100,),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Register',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'ShawBold',
-                            //   fontWeight: FontWeight.bold,
-                            fontSize: 32,
-                          ),
-                        ),
-                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Register',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'ShawBold',
+                                        //   fontWeight: FontWeight.bold,
+                                        fontSize: 32,
+                                      ),
+                                    ),
+                                  ),
 
-                      SizedBox(height: 10,),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Create your account',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'ShawRegular',
-                            //   fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                                  SizedBox(height: 10,),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Create your account',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'ShawRegular',
+                                        //   fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  )
+                                ],
+                              )
                           ),
-                          textAlign: TextAlign.left,
-                        ),
+                          Expanded(
+                              child:Align(
+                                alignment: Alignment.bottomRight,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Action to perform when the button is pressed
+                                    print('Button pressed!');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.white, // Background color of the button
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.document_scanner,
+                                      color: Colors.black,
+                                      ), // Icon
+                                      SizedBox(width: 8.0), // Add some space between the icon and text
+                                      Text(
+                                        'Sacn Passport',
+                                          style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'ShawRegular',
+                                          //   fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                      ),
+                                  textAlign: TextAlign.left,
+                                      ), // Text
+                                    ],
+                                  ),
+                                )
+                              )
+                          )
+                        ],
                       )
+
 
 
                     ],
@@ -83,7 +140,7 @@ class SignupScreenState extends State<SignupScreen>{
                             //  controller: _textEditingController,
                             style: TextStyle(color: Colors.grey), // Text color
                             decoration: InputDecoration(
-                              labelText: 'Full Name',
+                              labelText: full_name,
                               labelStyle: TextStyle(color: Colors.grey), // Label text color
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
@@ -100,7 +157,7 @@ class SignupScreenState extends State<SignupScreen>{
                             //  controller: _textEditingController,
                             style: TextStyle(color: Colors.grey), // Text color
                             decoration: InputDecoration(
-                              labelText: 'Email',
+                              labelText: email_,
                               labelStyle: TextStyle(color: Colors.grey), // Label text color
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),

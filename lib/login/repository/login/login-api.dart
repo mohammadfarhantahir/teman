@@ -8,17 +8,28 @@ class ApiHelper {
 
   Future<Map<String, dynamic>> login(String username, String password) async {
     final url = Uri.parse('$baseUrl/login');
-    final response = await http.post(
-      url,
-      body: {'username': username, 'password': password},
-    );
 
-    if (response.statusCode == 200) {
-      // Successful login
-      return json.decode(response.body);
-    } else {
-      // Handle errors
+
+    try {
+      final response = await http.post(
+        url,
+        body: {'email': username, 'password': password},
+      );
+
+      if (response.statusCode == 200) {
+        // Successful login
+        return json.decode(response.body);
+      } else {
+        // Print response body on failure
+        print('Failed to login. Response: ${response.body}');
+
+        throw Exception('Failed to login');
+
+      }
+    } catch (e) {
+      print('Exception during login: $e');
       throw Exception('Failed to login');
     }
+
   }
 }

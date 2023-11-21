@@ -3,8 +3,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../repository/login/login-api.dart';
+import '../widget/forgot-password/alert/forgot-password-alert.dart';
 
 class LoginScreenNew extends StatefulWidget{
   State<LoginScreenNew> createState()=> LoginScreenNewState();
@@ -16,15 +18,43 @@ class LoginScreenNewState  extends State<LoginScreenNew>{
   TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
+  // Login with Google
+  // Google Sign-In
+  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    try {
+      await googleSignIn.signIn();
+      // After successful sign-in, you can get user details like this:
+       GoogleSignInAccount account = googleSignIn.currentUser!;
+       print('User ID: ${account.id}');
+       print('User Email: ${account.email}');
+       print('User full-name: ${account.displayName}');
+
+       Navigator.pushNamed(context, '/SignupScreen', arguments: {'full_name': account.displayName,'email':account.email},); // Navigate to the dashboard
+
+      // More details: https://pub.dev/packages/google_sign_in
+    } catch (error) {
+      print('Google Sign-In failed: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google Sign-In failed: $error'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+  // End of Google Login
 
   // Login
 
-  void _performLogin() async {
+  void _performLogin(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final apiHelper = ApiHelper('https://raptorassistant.com:8787');
     try {
       final response = await apiHelper.login(
-        _usernameController.text,
-        _passwordController.text,
+        _usernameController.text.toLowerCase().trim(),
+        _passwordController.text.toLowerCase().trim(),
       );
 
       // Handle the response data
@@ -35,13 +65,37 @@ class LoginScreenNewState  extends State<LoginScreenNew>{
       } else {
         // Handle login failure
         print('Login failed: ${response['message']}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login failed: ${response['message']}'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
       // Handle network or other errors
       print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login failed: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
+
   // end of login
+
+  // show forget alert
+  void showForgotPasswordAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ForgotPasswordAlert();
+      },
+    );
+  }
+  // end of show forget alert
 
 
   @override
@@ -162,22 +216,50 @@ class LoginScreenNewState  extends State<LoginScreenNew>{
                           SizedBox(height: 20,),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text('Forgot Password?',
-                              style: TextStyle(
-                                color: Color(0xffC0E863),
-                                fontFamily: 'ShawBold',
-                                //   fontWeight: FontWeight.bold,
-                                fontSize: 22,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color(0xffffffff), // Same as container color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                              textAlign: TextAlign.left,
+                              onPressed: () {
+                                // Show the custom alert
+                                showForgotPasswordAlert(context);
+
+                              },
+                              child: Text('Forgot Password?',
+                                style: TextStyle(
+                                  color: Color(0xffC0E863),
+                                  fontFamily: 'ShawBold',
+                                  //   fontWeight: FontWeight.bold,
+                                  fontSize: 22,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
                             ),
+
                           ),
                           SizedBox(height: 40,),
                           Container(
                             height: 50,
                             width: 350,
                             child: ElevatedButton(
-                              onPressed: _performLogin,
+                              onPressed: (){
+                                if(_usernameController.text.isEmpty || _passwordController.text.isEmpty){
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Email and Password is empty'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                                else{
+                                  _performLogin(context);
+                                  print('clicked ');
+                                }
+
+                              },
                               style: ElevatedButton.styleFrom(
                                 primary: Color(0xffC0E863), // Same as container color
                                 shape: RoundedRectangleBorder(
@@ -235,6 +317,7 @@ class LoginScreenNewState  extends State<LoginScreenNew>{
                             width: 350,
                             child: ElevatedButton(
                               onPressed: () {
+                                _handleGoogleSignIn(context);
                                 // Perform the action when the button is pressed
                               },
                               style: ElevatedButton.styleFrom(

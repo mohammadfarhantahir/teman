@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "283154495713",
+    "project_id": "teman-final",
+    "storage_bucket": "teman-final.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283154495713:android:010fd041948a226ed39fa0",
+        "android_client_info": {
+          "package_name": "com.nigella.teman_finalproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLdxW-oAEb4SA1WZxHrqlQZajwVUcGul8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

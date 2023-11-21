@@ -15,6 +15,7 @@ import 'dashboard/screen/dashboard-screen.dart';
 import 'intro-screen/screen/intro-screen.dart';
 import 'login/screen/login-screen-new.dart';
 import 'login/screen/login-screen.dart';
+import 'login/widget/forgot-password/alert/forgot-password-alert.dart';
 
 Future<void> main() async {
   // Ensure the binding is properly initialized before running the app
@@ -83,11 +84,12 @@ class MyApp extends StatelessWidget {
         '/LoginScreen': (context) => LoginScreenNew(), // Pass cameras list to LoginScreen
       //  '/IntroductionScreen': (context) => IntroductionScreen(), //
         '/WelcomeScreen': (context) => WelcomeScreen(), //
-        '/SignupScreen': (context) => SignupScreen(), //
+        '/SignupScreen': (context) => SignupScreen(full_name: 'N/A', email: 'N/A',), //
         '/DashboardScreen': (context) => DashboardScreen(), //
         '/AssistantScreen': (context) => AssistantScreen(), //
         '/WalletScreen': (context) => WalletScreen(), //
         '/AccommodationScreen': (context) => AccommodationScreen(), //
+
 
 
 
